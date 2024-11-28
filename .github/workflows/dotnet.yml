@@ -1,0 +1,36 @@
+name: .NET CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout репозиторій
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Встановлення .NET SDK
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.0' 
+
+      # 3. Встановлення залежностей
+      - name: Restore dependencies
+        run: dotnet restore
+
+      # 4. Збірка проєкту
+      - name: Build project
+        run: dotnet build --no-restore --configuration Release
+
+      # 5. Запуск тестів
+      - name: Run tests
+        run: dotnet test --no-build --verbosity normal
